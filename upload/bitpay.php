@@ -435,20 +435,7 @@ class plgVmPaymentBitPay extends vmPSPlugin
 			$errors = array();
 		}
 
-		if ($this->getPluginMethods ($cart->vendorId) === 0) {
-			if (empty($this->_name)) {
-				$app = JFactory::getApplication ();
-				$app->enqueueMessage (JText::_ ('COM_VIRTUEMART_CART_NO_' . strtoupper ($this->_psType)));
-				return FALSE;
-			}
-			else {
-				return FALSE;
-			}
-		}
-		$html = array();
-		$method_name = $this->_psType . '_name';
-
-		return TRUE;
+		return $this->displayListFE ($cart, $selected, $htmlIn);
 	}
 
 	/**
