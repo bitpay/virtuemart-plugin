@@ -1,7 +1,19 @@
 <?php
 
-defined('_JEXEC') or die('Restricted access');
+function bplog($contents)
+{
+	$file = 'logs/bplog.txt';
+	file_put_contents($file, date('m-d H:i:s').": ", FILE_APPEND);
+	if (is_array($contents))
+		file_put_contents($file, var_export($contents, true)."\n", FILE_APPEND);		
+	else if (is_object($contents))
+		file_put_contents($file, json_encode($contents)."\n", FILE_APPEND);
+	else
+		file_put_contents($file, $contents."\n", FILE_APPEND);
+}
 
+
+defined('_JEXEC') or die('Restricted access');
 
 /**
  * @version $Id: standard.php,v 1.4 2005/05/27 19:33:57 ei
@@ -256,123 +268,49 @@ class plgVmPaymentBitPay extends vmPSPlugin
 		return $this->setOnTablePluginParams($name, $id, $table);
 	}
 
-	//Notice: We only need to add the events, which should work for the specific plugin, when an event is doing nothing, it should not be added
-
-	/**
-	 * Save updated order data to the method specific table
-	 *
-	 * @param array $_formData Form data
-	 * @return mixed, True on success, false on failures (the rest of the save-process will be
-	 * skipped!), or null when this method is not actived.
-	 * @author Oscar van Eijk
-	 *
-	public function plgVmOnUpdateOrderPayment(  $_formData) {
-	return null;
-	}
-
-	/**
-	 * Save updated orderline data to the method specific table
-	 *
-	 * @param array $_formData Form data
-	 * @return mixed, True on success, false on failures (the rest of the save-process will be
-	 * skipped!), or null when this method is not actived.
-	 * @author Oscar van Eijk
-	 *
-	public function plgVmOnUpdateOrderLine(  $_formData) {
-	return null;
-	}
-
-	/**
-	 * plgVmOnEditOrderLineBE
-	 * This method is fired when editing the order line details in the backend.
-	 * It can be used to add line specific package codes
-	 *
-	 * @param integer $_orderId The order ID
-	 * @param integer $_lineId
-	 * @return mixed Null for method that aren't active, text (HTML) otherwise
-	 * @author Oscar van Eijk
-	 *
-	public function plgVmOnEditOrderLineBEPayment(  $_orderId, $_lineId) {
-	return null;
-	}
-
-	/**
-	 * This method is fired when showing the order details in the frontend, for every orderline.
-	 * It can be used to display line specific package codes, e.g. with a link to external tracking and
-	 * tracing systems
-	 *
-	 * @param integer $_orderId The order ID
-	 * @param integer $_lineId
-	 * @return mixed Null for method that aren't active, text (HTML) otherwise
-	 * @author Oscar van Eijk
-	 *
-	public function plgVmOnShowOrderLineFE(  $_orderId, $_lineId) {
-	return null;
-	}
 
 	/*
-		 *   plgVmOnPaymentNotification() - This event is fired by Offline Payment. It can be used to validate the payment data as entered by the user.
-		 * Return:
-		 * Parameters:
-		 *  None
-		 *  @author Valerie Isaksen
-		 */
-
-	/**
-	 * @return bool|null
-	 */
-	function plgVmOnPaymentNotification () {
-
-		//$this->_debug = true;
+	*   plgVmOnPaymentNotification() - This event is fired by Offline Payment. It can be used to validate the payment data as entered by the user.
+	*/
+	function plgVmOnPaymentNotification () {	
 		if (!class_exists ('VirtueMartModelOrders')) {
 			require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php');
 		}
-		$bitpay_data = JRequest::get ('post');
-		if (!isset($bitpay_data['invoice'])) {
+		$bitpay_data = file_get_contents("php://input");
+		$bitpay_data = json_decode($bitpay_data, true);	
+		$bitpay_data['posData'] = json_decode($bitpay_data['posData'], true);
+		
+		if (!isset($bitpay_data['posData'])) {
+			bplog('no invoice in data');
 			return NULL;
 		}
-		$order_number = $bitpay_data['invoice'];
-		if (!($virtuemart_order_id = VirtueMartModelOrders::getOrderIdByOrderNumber ($bitpay_data['invoice']))) {
+		$order_number = $bitpay_data['posData']['id_order'];
+		if (!($virtuemart_order_id = VirtueMartModelOrders::getOrderIdByOrderNumber ($order_number))) {
+			bplog('order not found '.$order_number);
 			return NULL;
 		}
-
-		$vendorId = 0;
-		if (!($payments = $this->getDatasByOrderId ($virtuemart_order_id))) {
-			return NULL;
-		}
-
-		$method = $this->getVmPluginMethod ($payments[0]->virtuemart_paymentmethod_id);
-		if (!$this->selectedThisElement ($method->payment_element)) {
-			return FALSE;
-		}
-		if (isset($method->log_ipn) and $method->log_ipn) {
-			$this->logIpn ();
-		}
-		$this->_debug = $method->debug;
-
-		$this->logInfo ('bitpay_data ' . implode ('   ', $bitpay_data), 'message');
 
 		$modelOrder = VmModel::getModel ('orders');
-		$order = array();
-
-
-		// check BitPay Hash
-		$handle = fopen('php://input','r');
-		$jsonInput = fgets($handle);
-		$decoded = json_decode($jsonInput, true);
-		fclose($handle);
-
-		$posData = json_decode($decoded['posData']);
-
-		if ($posData->hash == crypt($virtuemart_order_id, $method->merchant_apikey))
-		{
-			$modelOrder->updateStatusForOneOrder ($virtuemart_order_id, $order, TRUE);
-			//// remove vmcart
-			if (isset($paypal_data['custom'])) {
-				$this->emptyCart ($bitpay_data['custom'], $order_number);
-			}
+		$order = $modelOrder->getOrder($virtuemart_order_id);
+		if (!$order) {
+			bplog('order could not be loaded '.$virtuemart_order_id);
+			return NULL;
 		}
-		//die();
+
+		$method = $this->getVmPluginMethod($order['details']['BT']->virtuemart_paymentmethod_id);
+		if ($bitpay_data['posData']['hash'] != crypt($order_number, $method->merchant_apikey))
+		{
+			bplog('api key invalid for order '.$order_number);
+			return NULL;
+		}
+		
+		if ($bitpay_data['status'] != 'confirmed' and $bitpay_data['status'] != 'complete')
+		{
+			return NULL; // not the status we're looking for 
+		}
+		
+		$order['order_status'] = 'C'; // move to admin method option?
+		$modelOrder->updateStatusForOneOrder ($virtuemart_order_id, $order, TRUE);
 	}
 
 	/**
@@ -600,9 +538,16 @@ class plgVmPaymentBitPay extends vmPSPlugin
 			$response = json_decode($responseString, true);
 		}
 		curl_close($curl);
-
-		header('Location: ' . $response['url']);
-		exit;
+		
+		$this->logInfo ('invoice ' . implode (' / ', $response), 'message');
+		if (isset($response['url']))
+		{
+			header('Location: ' . $response['url']);
+			exit;
+		}
+		else
+			bplog($response);
+		
 	}
 
 	function _handlePaymentCancel ($virtuemart_order_id, $html) {
@@ -630,8 +575,6 @@ class plgVmPaymentBitPay extends vmPSPlugin
 		return ($char);
 	}
 }
-
-
 
 defined('_JEXEC') or die('Restricted access');
 
