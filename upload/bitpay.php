@@ -533,15 +533,24 @@ class plgVmPaymentBitPay extends vmPSPlugin
 		}
 		curl_close($curl);
 		
-		$this->logInfo ('invoice ' . implode (' / ', $response), 'message');
-		if (isset($response['url']))
-		{
+		$this->logInfo ('invoice ' . var_export($response, true), 'message');
+
+		if (isset($response['url'])) {
 			header('Location: ' . $response['url']);
 			exit;
-		}
-		else
-			bplog('curl error - no invoice url');
-		
+		} else {
+			bplog(var_export($response, true));
+
+			$mainframe = JFactory::getApplication();
+	
+			if (is_array($response) && array_key_exists('error', $response)) {
+				$this->_handlePaymentCancel($order['details']['BT']->virtuemart_order_id, $response['error']['message']);
+			} else if (!is_array($response)) {
+				$this->_handlePaymentCancel($order['details']['BT']->virtuemart_order_id, "Invalid response returned from gateway");
+			} else {
+				$this->_handlePaymentCancel($order['details']['BT']->virtuemart_order_id, "Unknown error or response");
+			}
+		}	
 	}
 
 	function _handlePaymentCancel ($virtuemart_order_id, $html) {
