@@ -542,13 +542,13 @@ class plgVmPaymentBitPay extends vmPSPlugin
 			bplog(var_export($response, true));
 
 			$mainframe = JFactory::getApplication();
-
+	
 			if (is_array($response) && array_key_exists('error', $response)) {
-				$this->_handlePaymentCancel($order['details']['BT']->order_number, $response['error']['message']);
+				$this->_handlePaymentCancel($order['details']['BT']->virtuemart_order_id, $response['error']['message']);
 			} else if (!is_array($response)) {
-				$this->_handlePaymentCancel($order['details']['BT']->order_number, "Invalid response returned from gateway");
+				$this->_handlePaymentCancel($order['details']['BT']->virtuemart_order_id, "Invalid response returned from gateway");
 			} else {
-				$this->_handlePaymentCancel($order['details']['BT']->order_number, "Unknown error or response");
+				$this->_handlePaymentCancel($order['details']['BT']->virtuemart_order_id, "Unknown error or response");
 			}
 		}	
 	}
