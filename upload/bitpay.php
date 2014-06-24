@@ -544,11 +544,14 @@ class plgVmPaymentBitPay extends vmPSPlugin
 			$mainframe = JFactory::getApplication();
 
 			if (is_array($response) && array_key_exists('error', $response)) {
-				$mainframe->redirect(JRoute::_('index.php?option=com_virtuemart&view=cart', FALSE), JText::_($response['error']['message']));
+				//$mainframe->redirect(JRoute::_('index.php?option=com_virtuemart&view=cart', FALSE), JText::_($response['error']['message']));
+				$this->_handlePaymentCancel($order['details']['BT']->order_number, $response['error']['message']);
 			} else if (!is_array($response)) {
-				$mainframe->redirect(JRoute::_('index.php?option=com_virtuemart&view=cart', FALSE), JText::_("Invalid response returned from gateway"));
+				//$mainframe->redirect(JRoute::_('index.php?option=com_virtuemart&view=cart', FALSE), JText::_("Invalid response returned from gateway"));
+				$this->_handlePaymentCancel($order['details']['BT']->order_number, "Invalid response returned from gateway");
 			} else {
-				$mainframe->redirect(JRoute::_('index.php?option=com_virtuemart&view=cart', FALSE), JText::_("Unknown error or response"));
+				//$mainframe->redirect(JRoute::_('index.php?option=com_virtuemart&view=cart', FALSE), JText::_("Unknown error or response"));
+				$this->_handlePaymentCancel($order['details']['BT']->order_number, "Unknown error or response");
 			}
 		}	
 	}
