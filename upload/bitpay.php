@@ -393,7 +393,7 @@ class plgVmPaymentBitPay extends vmPSPlugin
             'Content-Type: application/json',
             "Content-Length: $length",
             "Authorization: Basic $uname",
-            'X-BitPay-Plugin-Info: virtuemart033114',
+            'X-BitPay-Plugin-Info: virtuemart073015',
         );
 
         curl_setopt($curl, CURLOPT_PORT, 443);
@@ -678,7 +678,7 @@ class plgVmPaymentBitPay extends vmPSPlugin
             'Content-Type: application/json',
             "Content-Length: $length",
             "Authorization: Basic $uname",
-            'X-BitPay-Plugin-Info: virtuemart033114',
+            'X-BitPay-Plugin-Info: virtuemart073015',
         );
 
         curl_setopt($curl, CURLOPT_PORT, 443);
