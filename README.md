@@ -16,6 +16,7 @@ To get up and running with our plugin quickly, see the GUIDE here: https://githu
 
 **BitPay Support:**
 
+* Last Version Tested: Joomla 2.5.20 VirtueMart 2.6.6
 * [BitPay Labs](https://labs.bitpay.com/c/plugins/virtuemart)
   * Post a question in our discussion forums for this plugin
 * [Github Issues](https://github.com/bitpay/virtuemart-plugin/issues)
