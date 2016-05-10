@@ -77,7 +77,8 @@ class plgVmPaymentBitPay extends vmPSPlugin
             'virtuemart_paymentmethod_id' => 'mediumint(1) UNSIGNED',
             'payment_name'                => 'varchar(5000)',
             'payment_order_total'         => 'decimal(15,5) NOT NULL DEFAULT \'0.00000\'',
-            'payment_currency'            => 'char(3)'
+            'payment_currency'            => 'char(3)',
+            'logo'			  => 'varchar(5000)'
         );
 
         return $SQLfields;
