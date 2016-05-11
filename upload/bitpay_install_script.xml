@@ -38,9 +38,9 @@ THE SOFTWARE.
 	<files>
 		<filename plugin="bitpay">bitpay.xml</filename>
 		<filename plugin="bitpay">bitpay.php</filename>
+		<filename plugin="bitpay">bitcoin_default.png</filename>
 		<folder>language</folder>
 	</files>
-
 	<languages>
 		<language tag="en-GB">en-GB.plg_vmpayment_bitpay.ini</language>
 		<language tag="en-GB">en-GB.plg_vmpayment_bitpay.sys.ini</language>

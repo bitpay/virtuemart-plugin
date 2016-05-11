@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-<extension version="2.5" type="plugin" group="vmpayment" method="upgrade">
+<extension version="2.6" type="plugin" group="vmpayment" method="upgrade">
     <name>VM Payment - BitPay</name>
     <creationDate>July 27 2012</creationDate>
     <author>BitPay</author>
@@ -67,7 +67,11 @@ THE SOFTWARE.
                         <option value="medium">VMPAYMENT_BITPAY_SPEED_LABEL_MEDIUM</option>
                         <option value="high">VMPAYMENT_BITPAY_SPEED_LABEL_HIGH</option>
                     </field>
-
+                    <field name="payment_logos" type="vmfiles"  multiple="true" label="VMPAYMENT_BITPAY_LOGO"
+                      description="VMPAYMENT_BITPAY_LOGO"
+                      directory="/images/stories/virtuemart/payment"
+                      default="default" hide_default="1" hide_none="1"
+                      stripext="0" exclude="^_"/>
             </fieldset>
         </fields>
     </config>
