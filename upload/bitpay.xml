@@ -69,7 +69,7 @@ THE SOFTWARE.
                     </field>
                     <field name="payment_logos" type="vmfiles"  multiple="true" label="VMPAYMENT_BITPAY_LOGO"
                       description="VMPAYMENT_BITPAY_LOGO"
-                      directory="/images/stories/virtuemart/payment"
+                      directory="/plugins/vmpayment/bitpay/images"
                       default="default" hide_default="1" hide_none="1"
                       stripext="0" exclude="^_"/>
             </fieldset>
