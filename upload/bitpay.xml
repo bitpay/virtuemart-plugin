@@ -34,6 +34,7 @@ THE SOFTWARE.
     <files>
         <filename plugin="bitpay">bitpay.php</filename>
         <folder>language</folder>
+        <folder>images</folder>
     </files>
     <params addpath="/administrator/components/com_virtuemart/elements">
 
