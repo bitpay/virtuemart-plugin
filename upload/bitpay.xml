@@ -50,29 +50,4 @@ THE SOFTWARE.
             <option value="high">VMPAYMENT_BITPAY_SPEED_LABEL_HIGH</option>
         </param>
     </params>
-    <config>
-        <fields name="params">
-            <fieldset name="basic">
-                    <field name="merchant_apikey" type="text" label="VMPAYMENT_BITPAY_API_KEY_LABEL" description="VMPAYMENT_BITPAY_API_KEY_LABEL"/>
-
-                    <field name="network" type="list" default="live" label="VMPAYMENT_BITPAY_NETWORK_LABEL"
-                       description="VMPAYMENT_BITPAY_NETWORK_LABEL">
-                        <option value="live">VMPAYMENT_BITPAY_NETWORK_LABEL_LIVE</option>
-                        <option value="test">VMPAYMENT_BITPAY_NETWORK_LABEL_TEST</option>
-                    </field>
-
-                    <field name="speed" type="list" default="low" label="VMPAYMENT_BITPAY_SPEED_LABEL"
-                       description="VMPAYMENT_BITPAY_SPEED_LABEL">
-                        <option value="low">VMPAYMENT_BITPAY_SPEED_LABEL_LOW</option>
-                        <option value="medium">VMPAYMENT_BITPAY_SPEED_LABEL_MEDIUM</option>
-                        <option value="high">VMPAYMENT_BITPAY_SPEED_LABEL_HIGH</option>
-                    </field>
-                    <field name="payment_logos" type="vmfiles"  multiple="true" label="VMPAYMENT_BITPAY_LOGO"
-                      description="VMPAYMENT_BITPAY_LOGO"
-                      directory="/images/stories/virtuemart/payment"
-                      default="default" hide_default="1" hide_none="1"
-                      stripext="0" exclude="^_"/>
-            </fieldset>
-        </fields>
-    </config>
 </extension>
