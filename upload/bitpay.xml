@@ -29,7 +29,7 @@ THE SOFTWARE.
     <authorUrl>http://www.bitpay.com</authorUrl>
     <copyright>Copyright</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <description>BitPay payment plugin</description>
     <files>
         <filename plugin="bitpay">bitpay.php</filename>
@@ -38,6 +38,8 @@ THE SOFTWARE.
     <params addpath="/administrator/components/com_virtuemart/elements">
 
         <param name="merchant_apikey" type="text"  label="VMPAYMENT_BITPAY_API_KEY_LABEL" description="VMPAYMENT_BITPAY_API_KEY_LABEL" />
+        <param name="cost_per_transaction" type="text" label="VMPAYMENT_BITPAY_TXN_TOTAL" description="VMPAYMENT_BITPAY_TXN_TOTAL_EXPLAIN" />
+		<param name="cost_percent_total" type="text" label="VMPAYMENT_BITPAY_PERCENT_TOTAL" description="VMPAYMENT_BITPAY_PERCENT_TOTAL_EXPLAIN" />
         <param name="network" type="list" default="live" label="VMPAYMENT_BITPAY_NETWORK_LABEL"
            description="VMPAYMENT_BITPAY_NETWORK_LABEL">
             <option value="live">VMPAYMENT_BITPAY_NETWORK_LABEL_LIVE</option>
